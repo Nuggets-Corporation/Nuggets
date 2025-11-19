@@ -5,7 +5,7 @@ if (navigator.userAgent.includes("Firefox")) {
   });
 }
 
-importScripts("/scramjet/scramjet.all.js");
+importScripts("/sj/scramjet.all.js");
 importScripts("/uv/uv.bundle.js");
 importScripts("/uv/uv.config.js");
 importScripts("/workerware.js");

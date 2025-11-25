@@ -1,0 +1,21 @@
+---
+import { svgMap } from '../../svg.map';
+interface Props {
+  name: string,
+  url?: string,
+  proxyUrl?: string,
+  target?: string,
+  class?: string,
+  innerClass?: string,
+  style?: string,
+  id?: string,
+  title: string,
+}
+
+const { name, url, proxyUrl, class: Class, innerClass, style: sty, id, title } = Astro.props;
+const style = `color: var(--text-color); ${sty || ''}`; 
+const SvgContent = svgMap.get(name);
+const proxy=`/search?q=${encodeURIComponent(proxyUrl)}`
+---
+
+<a title={title} id={id} class:list={[Class]} style="text-decoration: none;" href={url ?? proxy ?? ''}><SvgContent class:list={[innerClass]} style={style}/></a>

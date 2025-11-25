@@ -1,0 +1,17 @@
+---
+import Layout from '@l/Layout.astro';
+---
+
+<Layout>
+	<div class="main">
+		<div class="title">
+			<img class="title-image" src={import.meta.env.replacement + '/assets/imgs/nuggets.png'}>
+			<h1>Nuggets</h1>
+			<p class="desc">An innovative web proxy built for simplicity and near-global compatibility.</p>
+		</div>
+		<form class="search" id="search">
+			<input id="url" spellcheck="false" autocomplete="off" autocapitalize="off" class="searchbar" type="text" placeholder="Start Searching...">
+		</form>
+	</div>
+	<script src={import.meta.env.replacement + '/assets/js/search.js'} defer></script>
+</Layout>

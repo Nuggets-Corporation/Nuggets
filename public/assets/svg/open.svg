@@ -1,0 +1,16 @@
+<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <mask id="openmask" mask-type="luminance">
+    <rect x="0" y="0" width="24" height="24" fill="white"/>
+    <rect x="8" y="0" width="16" height="16" fill="black"/>
+  </mask>
+  <g fill="none">
+    <rect x="2" y="2" width="20" height="20" rx="3" stroke-width="2" mask="url(#openmask)"/>
+  <g stroke-linecap="round" stroke-width="2">
+    <line x1="6" x2="12" y1="2" y2="2"/>
+    <line x1="16" x2="22" y1="2" y2="2"/>
+    <line x1="22" x2="22" y1="12" y2="18"/>
+    <line x1="22" x2="22" y1="2" y2="8"/>
+    <line x1="12" x2="22" y1="12" y2="2"/>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+---
+import Layout from '@l/Layout.astro';
+import Proxy from '@s/Proxy.astro';
+import StaticJS from '@s/StaticJS.astro';
+const url = Astro.url;
+const search = url.searchParams.get('q') ?? undefined;
+const wispUrl = import.meta.env.wispUrl;
+const theme = import.meta.env.theme;
+const Define = `
+<script>
+    window.wispVal = '${wispUrl}';
+    window.routeQuery = '${search}';
+    window.theme = '${theme}';
+</script>
+`;
+---
+
+<Layout name="Search">
+    <link slot="head" rel="stylesheet" href={import.meta.env.replacement + '/assets/css/pages/search.css'}>
+	<div class="main">
+        <iframe id="iframe"></iframe>
+        <form class="search" id="search">
+            <input id="url" spellcheck="false" autocomplete="off" autocapitalize="off" class="searchbar" type="text" placeholder="Start Searching...">
+        </form>
+	</div>
+
+    <script src={import.meta.env.replacement + '/baremux/index.js'} defer></script>
+    <Proxy/>
+    <StaticJS/>
+    <Fragment set:html={Define} />
+    <script type="module" src={import.meta.env.replacement + '/assets/js/proxy.js'} defer></script>
+</Layout>

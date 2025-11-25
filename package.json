@@ -2,24 +2,40 @@
   "name": "nuggets",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.mjs",
   "type": "module",
   "scripts": {
-    "nugget": "node index.js"
+    "build:static": "cross-env staticBuild=static node build.js",
+    "build:server": "cross-env staticBuild=server node build.js",
+    "start": "node server.mjs",
+    "nugget": "npm run build && npm run start",
+    "dev": "astro dev --host 0.0.0.0"
   },
   "keywords": [],
   "author": "Nuggets",
   "license": "GNU",
   "packageManager": "pnpm@10.19.0",
   "dependencies": {
-		"@mercuryworkshop/bare-mux": "^2.1.7",
-		"@mercuryworkshop/epoxy-transport": "^2.1.28",
-		"@mercuryworkshop/libcurl-transport": "^1.5.0",
-		"@mercuryworkshop/wisp-js": "^0.3.3",
-		"@titaniumnetwork-dev/ultraviolet": "^3.2.10",
-		"@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz",
-		"chalk": "^5.2.0",
-		"cors": "^2.8.5",
-		"express": "^4.19.2"
-	}
+    "@astrojs/node": "^9.5.1",
+    "@mercuryworkshop/bare-mux": "^2.1.7",
+    "@mercuryworkshop/epoxy-transport": "^2.1.28",
+    "@mercuryworkshop/libcurl-transport": "^1.5.0",
+    "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz",
+    "@mercuryworkshop/wisp-js": "^0.3.3",
+    "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
+    "astro": "^5.15.9",
+    "chalk": "^5.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "finalhandler": "^2.1.0",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^3.0.5",
+    "serve-static": "^2.2.0",
+    "virtual": "^0.2.0",
+    "vite-plugin-static-copy": "^3.1.4"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "yargs": "^18.0.0"
+  }
 }

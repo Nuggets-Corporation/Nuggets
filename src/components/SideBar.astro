@@ -1,0 +1,30 @@
+---
+import Svg from '@c/Svg.astro';
+---
+<div class="SideBarToggle hidden" id="sidebartoggle">
+    <Svg title="Show Sidebar" class="bar-item" name="show" id="sidebarshow"/>
+</div>
+<script type="module" src={import.meta.env.replacement + '/assets/js/sidebar.js'} defer></script>
+<div id="sidebar" class="SideBar shown">
+    <div>
+        <Svg title="Home" class="bar-item" name="outline" url="/"/>
+        <hr>
+        <Svg title="Search" class="bar-item" name="pages" url="/search"/>
+        <div class="pages icons">
+            <Svg title="Games" class="bar-item" name="games" url="/games"/>
+            <Svg title="Documentation" class="bar-item" name="book" url="/docs"/>
+            <Svg title="About us" class="bar-item" name="about" url="/about"/>
+        </div>
+        <hr>
+        <div class="shortcuts icons">
+            <Svg title="Youtube" class="bar-item" name="video" proxyUrl="https://youtube.com"/>
+            <Svg title="GeForce NOW" class="bar-item" name="geforce" proxyUrl="https://play.geforcenow.com/mall/"/>
+            <Svg title="Discord" class="bar-item" name="discord" proxyUrl="https://discord.com/app/"/>
+        </div>
+    </div>
+    <div>
+        <Svg title="Cloak with about:blank" class="bar-item" name="open" id="cloak"/>
+        <Svg title="Hide Sidebar" class="bar-item" name="hide" id="sidebarhide"/>
+        <script type="module" src={import.meta.env.replacement + '/assets/js/cloak.js'} defer></script>
+    </div>
+</div>

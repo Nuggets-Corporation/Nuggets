@@ -15,7 +15,7 @@ import apps from '../apps.json';
 		</form>
 		<div id="apps" class="apps">
 			{apps.map((app) => (
-				<a href={`/search?q=` + encodeURIComponent(app.url)} class="app" data-name={app.name.toLowerCase()}>
+				<a href={`/search?q=` + encodeURIComponent(btoa(app.url))} class="app" data-name={app.name.toLowerCase()}>
 					<img class="appimage" src={app.image} alt={app.name} />
 					<span class="name">{app.name}</span>
 				</a>

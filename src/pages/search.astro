@@ -43,7 +43,7 @@ const Define = `<script>
             const config = { replacement, wispVal, scramjet, proxy: 'scramjet' };
 
             if (routeQuery !== 'undefined' && iframe && url) {
-                const decodedQuery = decodeURIComponent(routeQuery);
+                const decodedQuery = decodeURIComponent(atob(routeQuery));
                 loadUrl(decodedQuery, config, iframe, url);
             }
 

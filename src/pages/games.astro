@@ -16,7 +16,7 @@ import games from '../games.json';
 		</form>
 		<div id="apps" class="apps">
 			{games.map((game) => (
-				<a href={game.url ?? `/search?q=` + encodeURIComponent(game.proxyUrl)} class="app" data-name={game.name.toLowerCase()}>
+				<a href={game.url ?? `/search?q=` + encodeURIComponent(btoa(game.proxyUrl))} class="app" data-name={game.name.toLowerCase()}>
 					<img class="appimage" src={game.image} alt={game.name} />
 					<span class="name">{game.name}</span>
 				</a>

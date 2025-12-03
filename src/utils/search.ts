@@ -9,7 +9,7 @@ export function handleSearch(
 
     if (query) {
         const encodedQuery = encodeURIComponent(query);
-        const newUrl = `/search?q=${encodedQuery}`;
+        const newUrl = `/search?q=${btoa(encodedQuery)}`;
         window.location.href = newUrl;
     }
 }

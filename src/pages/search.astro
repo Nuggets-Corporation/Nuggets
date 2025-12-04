@@ -5,11 +5,9 @@ import PromptClose from '@s/PromptClose.astro';
 import Tabs from '@c/Tabs.astro';
 import AddressBar from '@c/AddressBar.astro';
 import Bookmarks from '@c/Bookmarks.astro';
-const href = Astro.url.searchParams.get('q');
 const Define = `<script>
     const replacement = '${replacement}';
     const wispVal = '${import.meta.env.wispUrl}';
-    const routeQuery = '${href ?? undefined}';
 </script>`;
 ---
 
@@ -32,7 +30,9 @@ const Define = `<script>
         import { bookmarks, bookmarkToggle, updateBookmark } from "../utils/bookmarks";
         
         let config: any = null;
-        
+        const params = new URLSearchParams(window.location.search);
+        const routeQuery = params.get('q') ?? undefined;
+
         window.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'open-new-tab') {
                 const url = event.data.url;
@@ -66,7 +66,7 @@ const Define = `<script>
             
             bookmarks(replacement);
             
-            if (routeQuery !== 'undefined' && iframe) {
+            if (routeQuery !== undefined && iframe) {
                 iframeLoading(iframe, replacement);
             }
             
@@ -83,7 +83,7 @@ const Define = `<script>
                 setupIframe(iframe, config);
             }
 
-            if (routeQuery !== 'undefined' && iframe && url) {
+            if (routeQuery !== undefined && iframe && url) {
                 const decodedQuery = decodeURIComponent(atob(routeQuery));
                 loadUrl(decodedQuery, config, iframe, url);
                 

@@ -67,9 +67,9 @@ import Layout from '@l/Layout.astro';
             themeSelect.appendChild(opt);
           });
 
-          const savedTheme = localStorage.getItem('theme') || (window.theme || 'default');
-          const savedProxy = localStorage.getItem('proxy') || (window.__uv__proxy || 'scramjet');
-          const savedTransport = localStorage.getItem('transport') || (window.__uv__transport || 'epoxy');
+          const savedTheme = localStorage.getItem('theme') || 'default';
+          const savedProxy = localStorage.getItem('proxy') || 'scramjet';
+          const savedTransport = localStorage.getItem('transport') || 'epoxy';
 
           themeSelect.value = savedTheme;
           proxySelect.value = savedProxy;

@@ -73,6 +73,10 @@ export function changeTab(tab: HTMLElement, content: HTMLElement): void {
     }
 
     updateAddress(tab);
+    
+    import('./proxy').then(({ updateNav }) => {
+        updateNav();
+    });
 }
 
 export function closeTab(tab: HTMLElement, tabs: HTMLElement, newtab: HTMLElement): void {
@@ -89,15 +93,16 @@ export function closeTab(tab: HTMLElement, tabs: HTMLElement, newtab: HTMLElemen
             if (intervalId) {
                 clearInterval(parseInt(intervalId));
             }
+            import('./proxy').then(({ cleanIframe }) => {
+                cleanIframe(correspondingIframe);
+            });
             correspondingIframe.remove();
         }
     }
 
     setTimeout(() => {
         tab.remove();
-
         const remainingTabs = Array.from(tabs.querySelectorAll('#tab:not(.hiddentab)')) as HTMLElement[];
-
         if (remainingTabs.length === 0) {
             const replacement = tab.getAttribute('data-replacement') || '';
             newTab(tabs, newtab, content, replacement);

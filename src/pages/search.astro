@@ -28,15 +28,42 @@ const Define = `<script>
     <script src={replacement + '/baremux/index.js'} defer></script>
     <Proxy/>
     <script>
-        import { iframeLoading, init, getWisp, setTransport, loadUrl, handleSubmit } from "../utils/proxy";
-        import { updateUrl, getActiveTab } from "../utils/tabs";
+        import { iframeLoading, init, getWisp, setTransport, loadUrl, handleSubmit,setupIframe, goBack, goForward, reload, updateNav } from "../utils/proxy";
+        import { updateUrl, getActiveTab, newTab } from "../utils/tabs";
         import { bookmarks, bookmarkToggle, updateBookmark } from "../utils/bookmarks";
+        
+        let config: any = null;
+        
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'open-new-tab') {
+                const url = event.data.url;
+                const tabs = document.getElementById('tabs');
+                const newtab = document.getElementById('newtab');
+                const content = document.getElementById('content');
+                
+                if (tabs && newtab && content && config) {
+                    newTab(tabs, newtab, content, replacement);
+                    
+                    setTimeout(() => {
+                        const activeIframe = document.querySelector('.tab-iframe.active') as HTMLIFrameElement;
+                        const urlInput = document.getElementById('url') as HTMLInputElement;
+                        
+                        if (activeIframe && urlInput) {
+                            loadUrl(url, config, activeIframe, urlInput);
+                        }
+                    }, 100);
+                }
+            }
+        });
         
         document.addEventListener('DOMContentLoaded', async () => {
             const iframe = document.querySelector('.tab-iframe.active') as HTMLIFrameElement | null;
             const url = document.getElementById("url") as HTMLInputElement | null;
             const search = document.getElementById("search") as HTMLFormElement | null;
             const addbookmark = document.getElementById("bookmark-btn");
+            const backBtn = document.getElementById("back");
+            const forwardBtn = document.getElementById("forward");
+            const reloadBtn = document.getElementById("reload");
             
             bookmarks(replacement);
             
@@ -50,6 +77,10 @@ const Define = `<script>
             const connection = new window.BareMux.BareMuxConnection(`${replacement}/baremux/worker.js`);
             await setTransport(connection, "epoxy", replacement, wispUrl);
             const config = { replacement, wispVal, scramjet, proxy: 'scramjet' };
+
+            if (iframe) {
+                setupIframe(iframe, config);
+            }
 
             if (routeQuery !== 'undefined' && iframe && url) {
                 const decodedQuery = decodeURIComponent(atob(routeQuery));
@@ -86,12 +117,52 @@ const Define = `<script>
                 });
             }
             
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    if (!backBtn.classList.contains('disabled')) {
+                        goBack(config);
+                    }
+                });
+            }
+            
+            if (forwardBtn) {
+                forwardBtn.addEventListener('click', () => {
+                    if (!forwardBtn.classList.contains('disabled')) {
+                        goForward(config);
+                    }
+                });
+            }
+            
+            if (reloadBtn) {
+                reloadBtn.addEventListener('click', () => {
+                    reload();
+                });
+            }
+            
             document.addEventListener('click', (e) => {
                 const target = e.target as HTMLElement;
                 if (target.id === 'tab' || target.closest('#tab')) {
-                    setTimeout(() => updateBookmark(), 100);
+                    setTimeout(() => {
+                        updateBookmark();
+                        updateNav();
+                    }, 100);
                 }
             });
+            
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node instanceof HTMLIFrameElement && node.classList.contains('tab-iframe')) {
+                            setupIframe(node, config);
+                        }
+                    });
+                });
+            });
+            
+            const content = document.getElementById('content');
+            if (content) {
+                observer.observe(content, { childList: true });
+            }
         });
     </script>
     <PromptClose/>

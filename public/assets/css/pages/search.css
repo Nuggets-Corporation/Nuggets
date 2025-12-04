@@ -44,7 +44,7 @@ iframe.active {
     background-color: var(--base);
     margin: 4px;
     transition: filter 0.2s ease-in-out, max-width 0.2s ease-in-out;
-    max-width: 12.5vw;
+    max-width: 150px;
     overflow: hidden;
     white-space: nowrap;
 }

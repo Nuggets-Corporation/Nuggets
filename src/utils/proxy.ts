@@ -228,6 +228,32 @@ export function reload(): void {
     }
 }
 
+function applyTheme(theme: string, replacement: string): void {
+    const id = 'theme';
+    let link = document.getElementById(id) as HTMLLinkElement;
+    const href = `${replacement}/assets/css/themes/${theme}.css`;
+    if (!link) {
+        link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.id = id;
+        document.head.appendChild(link);
+    }
+    link.href = href;
+}
+
+function synaptic(url: string, replacement: string): void {
+    const addr = new URL(url);
+    const hostname = addr.hostname.toLowerCase();
+    
+    if (hostname === 'synaptic.site' || hostname.endsWith('.synaptic.site')) {
+        const theme = localStorage.getItem('theme');
+        if (theme !== 'synaptic') {
+            localStorage.setItem('theme', 'synaptic');
+            applyTheme('synaptic', replacement);
+        }
+    }
+}
+
 function loadDirect(
     decodedUrl: string,
     config: ProxyConfig,
@@ -249,9 +275,9 @@ function loadDirect(
     if (urlInput) {
         urlInput.value = decodedUrl;
     }
-    
+    synaptic(decodedUrl, config.replacement);
     import('../utils/tabs').then(({ updateUrl }) => {
-        updateUrl(tabId, decodedUrl);
+        updateUrl(tabId, decodedUrl, config.replacement);
     });
     
     if (addHistoryFlag) {
@@ -307,7 +333,7 @@ export function setupIframe(
     let lastUrl = '';
     const monitorInterval = setInterval(() => {
         try {
-                    if (!document.body.contains(iframe)) {
+            if (!document.body.contains(iframe)) {
                 clearInterval(monitorInterval);
                 navigationHistories.delete(tabId);
                 return;
@@ -320,8 +346,8 @@ export function setupIframe(
                 lastUrl = currentProxyUrl;
                 
                 const decodedUrl = decodeProxyUrl(currentProxyUrl, config);
-                
-                            const urlInput = document.getElementById('url') as HTMLInputElement;
+                synaptic(decodedUrl, replacement);
+                const urlInput = document.getElementById('url') as HTMLInputElement;
                 const activeIframe = document.querySelector('.tab-iframe.active');
                 
                 if (urlInput && activeIframe === iframe) {
@@ -332,15 +358,15 @@ export function setupIframe(
                     updateUrl(tabId, decodedUrl, replacement);
                 });
                 
-                            addHistory(tabId, decodedUrl);
+                addHistory(tabId, decodedUrl);
                 
-                            setTimeout(() => {
+                setTimeout(() => {
                     import('../utils/bookmarks').then(({ updateBookmark }) => {
                         updateBookmark();
                     });
                 }, 100);
                 
-                            interceptor(iframe, config);
+                interceptor(iframe, config);
             }
         } catch (e) {
                 }
@@ -378,35 +404,31 @@ function interceptor(iframe: HTMLIFrameElement, config: ProxyConfig): void {
     setTimeout(() => {
         const doc = iframe.contentDocument || iframe.contentWindow?.document;
         if (!doc || !doc.body) return;
-        
-                    doc.body.setAttribute('data-link-interceptor-injected', 'true');
-        
-                    doc.addEventListener('click', (e: MouseEvent) => {
+            doc.body.setAttribute('data-link-interceptor-injected', 'true');
+            doc.addEventListener('click', (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             const link = target.closest('a') as HTMLAnchorElement;
             
             if (!link || !link.href) return;
-            
-                            const isNewTab = link.target === '_blank' || 
-                            e.ctrlKey || 
-                            e.metaKey || 
-                            e.button === 1;
+                const isNewTab = link.target === '_blank' || 
+                e.ctrlKey || 
+                e.metaKey || 
+                e.button === 1;
             
             if (isNewTab) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                                    let url = link.href;
+                let url = link.href;
                 url = decodeProxyUrl(url, config);
-                
-                                    window.parent.postMessage({
+                window.parent.postMessage({
                     type: 'open-new-tab',
                     url: url
                 }, '*');
             }
         }, true);
         
-                    const originalOpen = doc.defaultView?.open;
+        const originalOpen = doc.defaultView?.open;
         if (originalOpen && doc.defaultView) {
             doc.defaultView.open = function(...args: any[]) {
                 const url = args[0];
@@ -416,7 +438,7 @@ function interceptor(iframe: HTMLIFrameElement, config: ProxyConfig): void {
                         type: 'open-new-tab',
                         url: decodedUrl
                     }, '*');
-                                            return null as any;
+                    return null as any;
                 }
                 return originalOpen.apply(this, args);
             };

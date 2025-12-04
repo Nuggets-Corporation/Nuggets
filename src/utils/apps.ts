@@ -1,3 +1,4 @@
+interface App {url: string; image: string; name: string;}
 interface AppOrder {card: HTMLElement; index: number;}
 
 export function filterApps(searchApps: HTMLInputElement, sortApps: HTMLSelectElement, apps: HTMLElement, app: HTMLElement[], order: AppOrder[]): void {
@@ -30,4 +31,34 @@ export function filterApps(searchApps: HTMLInputElement, sortApps: HTMLSelectEle
 
 export function orderApps(app: HTMLElement[]): AppOrder[] {
     return app.map((card, index) => ({ card, index }));
+}
+
+export function loadApps(apps: App[], appsContainer: HTMLElement): HTMLElement[] {
+    const appElements: HTMLElement[] = [];
+    const fragment = document.createDocumentFragment();
+
+    apps.forEach((app) => {
+        const url = document.createElement('a');
+        url.href = `/search?q=${encodeURIComponent(btoa(app.url))}`;
+        url.className = 'app';
+        url.setAttribute('data-name', app.name.toLowerCase());
+
+        const image = document.createElement('img');
+        image.className = 'image';
+        image.src = app.image;
+        image.alt = app.name;
+
+        const name = document.createElement('span');
+        name.className = 'name';
+        name.textContent = app.name;
+
+        url.appendChild(image);
+        url.appendChild(name);
+        
+        fragment.appendChild(url);
+        appElements.push(url);
+    });
+
+    appsContainer.appendChild(fragment);
+    return appElements;
 }

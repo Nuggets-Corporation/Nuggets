@@ -1,44 +1,64 @@
 ---
 import Layout from '@l/Layout.astro';
-import apps from '../apps.json';
+const Define = `<script>
+	const replacement = '${replacement}';
+</script>`;
 ---
 
 <Layout name="Apps">
-    <link slot="head" rel="stylesheet" href={replacement + '/assets/css/pages/apps.css'}>
+	<link slot="head" rel="stylesheet" href={replacement + '/assets/css/pages/apps.css'}>
+	<Fragment set:html={Define} />
 	<div class="main">
-        <form class="search" id="search">
-            <input type="text" id="searchApps" class="searchbar" placeholder="Search applications...">
-            <select id="sortApps" class="select">
-                <option value="alphabetical">Alphabetical</option>
-                <option value="recent">Recently Added</option>
-            </select>
+		<form class="search" id="search">
+			<input type="text" id="searchApps" class="searchbar" placeholder="Search applications...">
+			<select id="sortApps" class="select">
+				<option value="alphabetical">Alphabetical</option>
+				<option value="recent">Recently Added</option>
+			</select>
 		</form>
 		<div id="apps" class="apps">
-			{apps.map((app) => (
-				<a href={`/search?q=` + encodeURIComponent(btoa(app.url))} class="app" data-name={app.name.toLowerCase()}>
-					<img class="appimage" src={app.image} alt={app.name} />
-					<span class="name">{app.name}</span>
-				</a>
-			))}
+			<p id="loading">Loading applications...</p> 
 		</div>
 	</div>
 
 	<script>
-		import { filterApps, orderApps } from "../utils/apps";
+		import { filterApps, orderApps, loadApps } from "../utils/apps";
 		const searchApps = document.getElementById('searchApps') as HTMLInputElement | null;
 		const sortApps = document.getElementById('sortApps') as HTMLSelectElement | null;
 		const apps = document.getElementById('apps') as HTMLElement | null;
-		const appElements = Array.from(document.querySelectorAll<HTMLElement>('.app'));
 		const search = document.getElementById('search') as HTMLFormElement | null;
-		
-		if (searchApps && sortApps && apps) {
+		const loading = document.getElementById('loading') as HTMLParagraphElement | null;
+		const path = replacement + '/apps.json';
+		const fallbackpath = '/apps.json';
+		const handleSuccess = (appsData: any) => {
+			if (loading) loading.remove();
+			if (!apps) return;
+			const appElements = loadApps(appsData, apps); 
 			const order = orderApps(appElements);
-			
-			const filter = () => filterApps(searchApps, sortApps, apps, appElements, order);
-			
-			searchApps.addEventListener('input', filter);
-			sortApps.addEventListener('change', filter);
-			filter();
+
+			if (searchApps && sortApps) {
+				const filter = () => filterApps(searchApps, sortApps, apps, appElements, order);
+				searchApps.addEventListener('input', filter);
+				sortApps.addEventListener('change', filter);
+				filter();
+			}
+		};
+
+		const fetchApps = (path: string, fallback?: boolean) => {
+			return fetch(path)
+				.then(response => {
+					return response.json();
+				})
+				.then(apps => handleSuccess(apps))
+				.catch(error => {
+					if (!fallback && path === path) {
+						return fetchApps(fallbackpath, true);
+					}
+				});
+		};
+
+		if (apps && loading) {
+			fetchApps(path);
 		}
 		
 		if (search) {

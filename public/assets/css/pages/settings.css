@@ -91,3 +91,15 @@ button {
 #resetsettings:hover {
     filter: brightness(150%);
 }
+
+.author {
+    margin: 0;
+}
+
+.author::after {
+    content: "Created by " var(--author);
+    display: block;
+    margin: 0;
+    font-style: italic;
+    font-size: small;
+}

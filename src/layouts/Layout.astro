@@ -7,41 +7,54 @@ interface Props {
 const { name } = Astro.props;
 let title = "Nuggets"
 if (name) title = name + " | Nuggets";
+const themeScript = `
+  const savedTheme = localStorage.getItem('theme');
+  let initialtheme = 'default';
+  if (savedTheme) {
+    initialtheme = savedTheme;
+  } else if (typeof window !== 'undefined' && window.theme) {
+    initialtheme = window.theme;
+  }
+  document.getElementById('theme').href = \`${replacement}/assets/css/themes/\${initialtheme}.css\`;
+`;
+const defaultssr = 'default';
+const themePath = `${replacement}/assets/css/themes/${defaultssr}.css`;
+
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>{title}</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="generator" content={Astro.generator}>
-		<link id="favicon" rel="icon" type="image/svg+xml" href={replacement + '/assets/svg/favicon.svg'}>
+    <head>
+        <meta charset="UTF-8">
+        <title>{title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="generator" content={Astro.generator}>
+        <link id="favicon" rel="icon" type="image/svg+xml" href={replacement + '/assets/svg/favicon.svg'}>
 
-		<link rel="stylesheet" href={replacement + '/assets/css/global.css'}>
-		<link id="theme" rel="stylesheet" href={replacement + '/assets/css/themes/default.css'}>
-		<meta name="description" content="A very nuggety proxy">
-		<meta name="keywords" content="Nuggets, Proxy, Chicken Nugget, soap phia, Synaptic, Nugget, Nugget Corporation, EpicDevices, John Moderation">
-		<slot name="head"/>
-	</head>
-	<body>
-		<SideBar/>
-		<slot/>
-		<script>
-            const selectedTheme = localStorage.getItem('theme') || import.meta.env.theme || 'default';
+        <link rel="stylesheet" href={replacement + '/assets/css/global.css'}>
+        
+        <link id="theme" rel="stylesheet" href={themePath}> 
 
-            try {
-                let themeLink = document.getElementById('theme') as HTMLLinkElement | null;
-                if (!themeLink) {
-                    themeLink = document.createElement('link');
-                    themeLink.rel = 'stylesheet';
-                    themeLink.id = 'theme';
-                    document.head.appendChild(themeLink);
-                }
-                if (replacement && selectedTheme) {
-                    themeLink.href = `${replacement}/assets/css/themes/${selectedTheme}.css`;
-                }
-            } catch (e) {}
-		</script>
-	</body>
+        <meta name="description" content="A very nuggety proxy">
+        <slot name="head"/>
+
+        <script>
+            window.replacement = '{$replacement}'; 
+        </script>
+        
+        <script is:inline>
+            (function() {
+              const selectedTheme = localStorage.getItem('theme') || 'default';
+              const themeLink = document.getElementById('theme');
+              if (themeLink) {
+                const base = window.replacement || '';
+                themeLink.href = `${base}/assets/css/themes/${selectedTheme}.css`;
+              }
+            })();
+        </script>
+    </head>
+    <body>
+        <SideBar/>
+        <slot/>
+        </body>
 </html>

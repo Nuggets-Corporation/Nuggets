@@ -142,6 +142,8 @@ export function updateMeta(tabId: string): void {
         if (titleElement && iframeDoc.title) {
             const title = iframeDoc.title.trim();
             titleElement.textContent = title.length > 30 ? title.substring(0, 27) + '...' : title;
+        } else if (iframe.src === 'about:blank' || !iframe.src) {
+            titleElement.textContent = 'New Tab';
         } else {
             titleElement.textContent = 'Untitled';
         }

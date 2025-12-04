@@ -11,6 +11,7 @@ import Layout from '@l/Layout.astro';
         <label for="themesel">Theme</label>
         <select id="themesel"></select>
       </div>
+      <p class="author"></p>
       <div class="field">
         <label for="proxysel">Proxy</label>
         <select id="proxysel">
@@ -32,11 +33,9 @@ import Layout from '@l/Layout.astro';
 
       <script type="module">
         const replacement = (typeof window !== 'undefined' && window.replacement) ? window.replacement : '';
-        const themes = ['default'];
 
         function applyTheme(theme) {
-          if (!replacement) return;
-          const id = 'theme-css';
+          const id = 'theme';
           let link = document.getElementById(id);
           const href = `${replacement}/assets/css/themes/${theme}.css`;
           if (!link) {
@@ -48,7 +47,7 @@ import Layout from '@l/Layout.astro';
           link.href = href;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
           const themeSelect = document.getElementById('themesel');
           const proxySelect = document.getElementById('proxysel');
           const transportSelect = document.getElementById('transportsel');
@@ -56,7 +55,13 @@ import Layout from '@l/Layout.astro';
           const resetBtn = document.getElementById('resetsettings');
           const originalSaveText = 'Save';
           const savedSaveText = 'Saved ✓';
-
+          
+          let themes = ['default'];
+          const response = await fetch(`${replacement}/themes.json`);
+          if (response.ok) {
+            themes = await response.json();
+          }
+          
           themes.forEach(t => {
             const opt = document.createElement('option');
             opt.value = t;

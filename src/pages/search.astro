@@ -2,6 +2,9 @@
 import Layout from '@l/Layout.astro';
 import Proxy from '@s/Proxy.astro';
 import PromptClose from '@s/PromptClose.astro';
+import Tabs from '@c/Tabs.astro';
+import AddressBar from '@c/AddressBar.astro';
+import Bookmarks from '@c/Bookmarks.astro';
 const href = Astro.url.searchParams.get('q');
 const Define = `<script>
     const replacement = '${replacement}';
@@ -13,23 +16,29 @@ const Define = `<script>
 
 <Layout name="Search">
     <link slot="head" rel="stylesheet" href={replacement + '/assets/css/pages/search.css'}>
-	<div id="main" class="main">
-        <iframe id="iframe"></iframe>
-        <form class="search" id="search">
-            <input id="url" spellcheck="false" autocomplete="off" autocapitalize="off" class="searchbar" type="text" placeholder="Start Searching...">
-        </form>
+    <Fragment set:html={Define} />
+	<div id="main browser" class="main">
+        <Tabs/>
+        <AddressBar/>
+        <Bookmarks/>
+        <div id="content">
+        </div>
 	</div>
 
     <script src={replacement + '/baremux/index.js'} defer></script>
     <Proxy/>
-    <Fragment set:html={Define} />
     <script>
         import { iframeLoading, init, getWisp, setTransport, loadUrl, handleSubmit } from "../utils/proxy";
+        import { updateUrl, getActiveTab } from "../utils/tabs";
+        import { bookmarks, bookmarkToggle, updateBookmark } from "../utils/bookmarks";
         
         document.addEventListener('DOMContentLoaded', async () => {
-            const iframe = document.getElementById("iframe") as HTMLIFrameElement | null;
+            const iframe = document.querySelector('.tab-iframe.active') as HTMLIFrameElement | null;
             const url = document.getElementById("url") as HTMLInputElement | null;
             const search = document.getElementById("search") as HTMLFormElement | null;
+            const addbookmark = document.getElementById("bookmark-btn");
+            
+            bookmarks(replacement);
             
             if (routeQuery !== 'undefined' && iframe) {
                 iframeLoading(iframe, replacement);
@@ -45,13 +54,44 @@ const Define = `<script>
             if (routeQuery !== 'undefined' && iframe && url) {
                 const decodedQuery = decodeURIComponent(atob(routeQuery));
                 loadUrl(decodedQuery, config, iframe, url);
+                
+                const activeTab = getActiveTab();
+                if (activeTab) {
+                    updateUrl(activeTab.getAttribute('data-tab-id') || '', url.value);
+                }
+                
+                setTimeout(() => updateBookmark(), 500);
             }
 
-            if (search && url && iframe) {
+            if (search && url) {
                 search.addEventListener("submit", (event: Event) => {
-                    handleSubmit(event, url, config, iframe);
+                    event.preventDefault();
+                    const activeIframe = document.querySelector('.tab-iframe.active') as HTMLIFrameElement;
+                    if (activeIframe) {
+                        handleSubmit(event, url, config, activeIframe);
+                        
+                        const activeTab = getActiveTab();
+                        if (activeTab) {
+                            updateUrl(activeTab.getAttribute('data-tab-id') || '', url.value);
+                        }
+                        
+                        setTimeout(() => updateBookmark(), 500);
+                    }
                 });
             }
+            
+            if (addbookmark) {
+                addbookmark.addEventListener('click', () => {
+                    bookmarkToggle();
+                });
+            }
+            
+            document.addEventListener('click', (e) => {
+                const target = e.target as HTMLElement;
+                if (target.id === 'tab' || target.closest('#tab')) {
+                    setTimeout(() => updateBookmark(), 100);
+                }
+            });
         });
     </script>
     <PromptClose/>

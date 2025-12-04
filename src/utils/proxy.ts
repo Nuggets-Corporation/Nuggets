@@ -25,11 +25,12 @@ export function getLoadingSrc(replacement: string): string {
 </body>`;
 }
 
-export function iframeLoading(iframe: HTMLIFrameElement, loadingSrc: string): void {
+export function iframeLoading(iframe: HTMLIFrameElement, replacement: string): void {
     if (iframe && iframe.contentWindow) {
+        const loadingSrc = getLoadingSrc(replacement);
         const iframeSrc = iframe.contentWindow.document;
         iframeSrc.open();
-        iframeSrc.write(loadingSrc);
+        iframeSrc.write();
         iframeSrc.close();
     }
 }
@@ -118,6 +119,13 @@ export function loadUrl(
 
     iframe.src = url;
     urlInput.value = decodeURIComponent(newUrl);
+    
+    const tabId = iframe.getAttribute('data-tab-id');
+    if (tabId) {
+        import('../utils/tabs').then(({ updateUrl }) => {
+            updateUrl(tabId, decodeURIComponent(newUrl));
+        });
+    }
 }
 
 export function handleSubmit(

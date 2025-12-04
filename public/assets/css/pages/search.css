@@ -1,27 +1,273 @@
 iframe {
+    vertical-align: top;
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    flex: 1;
     margin: 0;
     padding: 0;
+    display: none;
+}
+
+iframe.active {
+    display: block;
+}
+
+#browser {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    max-width: var(--main-width);
+}
+
+.browsertop {
+    width: 100%;
+    height: 4vh;
+}
+
+#tabs {
+    display: flex;
+    align-items: flex-end;
+    background-color: var(--background-color);
+    box-sizing: border-box;
+}
+
+#tab {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3vh;
+    padding: 2px 12px;
+    gap: 12px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    background-color: var(--base);
+    margin: 4px;
+    transition: filter 0.2s ease-in-out, max-width 0.2s ease-in-out;
+    max-width: 12.5vw;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#tab.hiddentab {
+    max-width: 0 !important;
+}
+
+#tab.active {
+    background-color: var(--base);
+    border-radius: 15px 15px 0 0;
+    margin: 4px 4px 0 4px;
+    height: calc(3vh + 4px);
+}
+
+#tab[draggable="true"] {
+    cursor: grab;
+}
+
+#tab.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+#tab.placeholder {
+    background-color: var(--highlight-color, #ffffff33);
+}
+
+#tab.active:hover {
+    filter: brightness(100%);
+}
+
+#tab:hover {
+    filter: brightness(150%);
+}
+
+#tabs > #tab {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+}
+
+.info .favicon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.info #title {
+    font-size: 14px;
+    color: var(--text-color);
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+p {
+    margin: 0;
+}
+
+#newtab {
+    border-radius: 50%;
+    aspect-ratio: 1;
+    text-align: center;
+    font-size: 0.8em;
+    line-height: 1.3em;
+    width: 1.5em;
+    height: 1.5em;
+    user-select: none;
+    background-color: inherit;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#newtab:hover {
+    cursor: pointer;
+    background-color: var(--highlight-color, #ffffff33);
+}
+
+#newtab {
+    margin: 4px;
+}
+
+#address {
+    background-color: var(--base);
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+.navbutton {
+    display: flex;
+    height: 50%;
 }
 
 .search {
-    position: absolute;
     top: 1em;
-    width: 40vw;
+    flex: 1;
     height: auto;
     display: flex;
     align-items: center;
-    margin: 1em;
 }
 
-.searchbar {
-    position: absolute;
-    text-align: left;
-    background-color: var(--base);
-    padding: 1em;
+#url {
+    width: 100%;
+    margin: 0;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    height: 100%;
+    background-color: var(--background-color);
+    border-radius: 20px;
     border: none;
-    border-radius: 0.75em;
     color: var(--text-color);
-    width: calc(40vw - 2em);
+}
+
+#url:focus { outline: none; }
+#url::placeholder { color: var(--text-color); }
+
+#bookmarks {
+    background-color: var(--base);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border-bottom: var(--border-bar);
+}
+
+.bookmark-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    transition: filter ease-in-out 0.2s;
+}
+
+.bookmark-btn:hover {
+    filter: brightness(150%);
+}
+
+.bookmark-btn.bookmarked {
+    color: var(--text-color);
+}
+
+.bookmark-btn.bookmarked svg {
+    fill: var(--text-color);
+}
+
+#bookmarks {
+    display: flex;
+    gap: 12px;
+    background: var(--base);
+    border-bottom: var(--border-bar);
+}
+
+.bookmark {
+    max-height: 4vh;
+    margin: 4px;
+    padding: 4px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--base);
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 0;
+    position: relative;
+}
+
+.bookmark:hover {
+    filter: brightness(150%);
+}
+
+.favicon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.bookmark-title {
+    font-size: 14px;
+    color: var(--text-color);
+    cursor: pointer;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bookmark-delete {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    margin-left: 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.bookmark-delete:hover {
+    color: #ff4444;
+}
+
+div#content {
+    width: 100%;
+    flex: 1;
 }

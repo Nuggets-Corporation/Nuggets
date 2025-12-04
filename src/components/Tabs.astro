@@ -1,0 +1,19 @@
+---
+---
+<div id="tabs" class="browsertop">
+    <div id="newtab">+</div>
+</div>
+
+<script>
+    import { newTab } from '../utils/tabs';
+    
+    const tabs = document.getElementById('tabs');
+    const newtab = document.getElementById('newtab');
+    const content = document.getElementById('content');
+    
+    newTab(tabs, newtab, content, replacement);
+    
+    newtab.addEventListener('click', () => {
+        newTab(tabs, newtab, content, replacement);
+    });
+</script>

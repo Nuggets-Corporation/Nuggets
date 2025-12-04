@@ -1,12 +1,12 @@
 @font-face {
     font-family: Nugget;
-    src: url(../Nugget.woff2) format('woff2');
+    src: local(Arial);
+    unicode-range: U+0060, U+0022, U+0027, U+002B, U+00D7;
 }
 
 @font-face {
     font-family: Nugget;
-    src: local('Arial');
-    unicode-range: U+0060, U+0022, U+0027;
+    src: url(../Nugget.woff2) format('woff2');
 }
 
 :root {

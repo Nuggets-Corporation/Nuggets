@@ -5,21 +5,20 @@ interface Props {
 }
 
 const { name } = Astro.props;
-let title = "Nuggets"
+let title = "Nuggets";
 if (name) title = name + " | Nuggets";
-const themeScript = `
-  const savedTheme = localStorage.getItem('theme');
-  let initialtheme = 'default';
-  if (savedTheme) {
-    initialtheme = savedTheme;
-  } else if (typeof window !== 'undefined' && window.theme) {
-    initialtheme = window.theme;
-  }
-  document.getElementById('theme').href = \`${replacement}/assets/css/themes/\${initialtheme}.css\`;
-`;
-const defaultssr = 'default';
-const themePath = `${replacement}/assets/css/themes/${defaultssr}.css`;
 
+const defaultTheme = 'default';
+const themePath = `${replacement}/assets/css/themes/${defaultTheme}.css`;
+const Theme = `<script>
+	(function() {
+		const selectedTheme = localStorage.getItem('theme') || 'default';
+		const themeLink = document.getElementById('theme');
+		if (themeLink && selectedTheme !== 'default') {
+		themeLink.href = \`${replacement}/assets/css/themes/\${selectedTheme}.css\`;
+		}
+	})();
+</script>`;
 ---
 
 <!DOCTYPE html>
@@ -32,29 +31,15 @@ const themePath = `${replacement}/assets/css/themes/${defaultssr}.css`;
         <link id="favicon" rel="icon" type="image/svg+xml" href={replacement + '/assets/svg/favicon.svg'}>
 
         <link rel="stylesheet" href={replacement + '/assets/css/global.css'}>
-        
-        <link id="theme" rel="stylesheet" href={themePath}> 
+
+        <link id="theme" rel="stylesheet" href={themePath}>
 
         <meta name="description" content="A very nuggety proxy">
         <slot name="head"/>
-
-        <script>
-            window.replacement = '{$replacement}'; 
-        </script>
-        
-        <script is:inline>
-            (function() {
-              const selectedTheme = localStorage.getItem('theme') || 'default';
-              const themeLink = document.getElementById('theme');
-              if (themeLink) {
-                const base = window.replacement || '';
-                themeLink.href = `${base}/assets/css/themes/${selectedTheme}.css`;
-              }
-            })();
-        </script>
+    	<Fragment set:html={Theme} />
     </head>
     <body>
         <SideBar/>
         <slot/>
-        </body>
+    </body>
 </html>

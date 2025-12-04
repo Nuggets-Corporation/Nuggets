@@ -1,6 +1,6 @@
 {
   "name": "@nuggetscorporation/nuggets",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "description": "Nuggets",
   "main": "server.mjs",
   "type": "module",

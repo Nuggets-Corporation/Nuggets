@@ -34,7 +34,7 @@ const Define = `<script>
 		const handleSuccess = (appsData: any) => {
 			if (loading) loading.remove();
 			if (!apps) return;
-			const appElements = loadApps(appsData, apps); 
+			const appElements = loadApps(appsData, apps, replacement); 
 			const order = orderApps(appElements);
 
 			if (searchApps && sortApps) {

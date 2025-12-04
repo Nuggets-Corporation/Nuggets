@@ -33,7 +33,7 @@ export function orderApps(app: HTMLElement[]): AppOrder[] {
     return app.map((card, index) => ({ card, index }));
 }
 
-export function loadApps(apps: App[], appsContainer: HTMLElement): HTMLElement[] {
+export function loadApps(apps: App[], appsContainer: HTMLElement, replacement: string): HTMLElement[] {
     const appElements: HTMLElement[] = [];
     const fragment = document.createDocumentFragment();
 
@@ -45,7 +45,7 @@ export function loadApps(apps: App[], appsContainer: HTMLElement): HTMLElement[]
 
         const image = document.createElement('img');
         image.className = 'image';
-        image.src = app.image;
+        image.src = replacement + app.image;
         image.alt = app.name;
 
         const name = document.createElement('span');

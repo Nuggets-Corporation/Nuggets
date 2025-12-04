@@ -30,10 +30,8 @@ import Layout from '@l/Layout.astro';
         <button id="savesettings">Save</button>
         <button id="resetsettings" type="button">Reset</button>
       </div>
-
+      <Fragment set:html={`<script>const replacement=\`${replacement}\`;</script>`}/>
       <script type="module">
-        const replacement = (typeof window !== 'undefined' && window.replacement) ? window.replacement : '';
-
         function applyTheme(theme) {
           const id = 'theme';
           let link = document.getElementById(id);

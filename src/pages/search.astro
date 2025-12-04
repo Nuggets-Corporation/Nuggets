@@ -10,7 +10,6 @@ const Define = `<script>
     const replacement = '${replacement}';
     const wispVal = '${import.meta.env.wispUrl}';
     const routeQuery = '${href ?? undefined}';
-    const theme = '${import.meta.env.theme}';
 </script>`;
 ---
 
@@ -74,9 +73,11 @@ const Define = `<script>
             const scramjet = init(replacement);
             const wispUrl = getWisp(wispVal);
 
+            const selectedProxy = localStorage.getItem('proxy') || import.meta.env.proxy;
+            const selectedTransport = localStorage.getItem('transport') || import.meta.env.transport;
             const connection = new window.BareMux.BareMuxConnection(`${replacement}/baremux/worker.js`);
-            await setTransport(connection, "epoxy", replacement, wispUrl);
-            const config = { replacement, wispVal, scramjet, proxy: 'scramjet' };
+            await setTransport(connection, selectedTransport, replacement, wispUrl);
+            const config = { replacement, wispVal, scramjet, proxy: selectedProxy };
 
             if (iframe) {
                 setupIframe(iframe, config);

@@ -4,6 +4,8 @@ interface ImportMetaEnv {
   readonly replacement: string | '';
   readonly wispUrl: string | 'default';
   theme: string | 'default';
+  proxy: string | 'scramjet';
+  transport: string | 'epoxy';
 }
 
 interface ImportMeta {

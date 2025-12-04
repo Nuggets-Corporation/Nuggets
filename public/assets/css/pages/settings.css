@@ -1,0 +1,93 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+    height: 100%;
+    padding: 12px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.5em;
+    color: var(--text-color);
+}
+
+.field {
+    margin: 12px 0;
+    width: 25%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+label {
+    width: 120px;
+    min-width: 100px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+select {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--highlight-color, #ffffff33);
+    background-color: var(--base);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--highlight-color, #ffffff99);
+}
+
+.actions {
+    margin-top: 20px;
+    width: 25%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s, filter 0.2s, color 0.2s;
+}
+
+#savesettings {
+    background-color: var(--highlight-color, var(--text-color));
+    color: var(--base);
+}
+
+#savesettings:hover:not(:disabled) {
+    filter: brightness(110%);
+}
+
+#savesettings:disabled {
+    background-color: var(--highlight-color, var(--text-color));
+    color: var(--base);
+    cursor: default;
+    opacity: 0.8;
+}
+
+#resetsettings {
+    background-color: var(--base);
+    color: var(--text-color);
+    border: 1px solid var(--highlight-color, #ffffff33);
+}
+
+#resetsettings:hover {
+    filter: brightness(150%);
+}

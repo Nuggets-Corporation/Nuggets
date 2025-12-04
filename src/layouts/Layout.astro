@@ -27,5 +27,21 @@ if (name) title = name + " | Nuggets";
 	<body>
 		<SideBar/>
 		<slot/>
+		<script>
+            const selectedTheme = localStorage.getItem('theme') || import.meta.env.theme || 'default';
+
+            try {
+                let themeLink = document.getElementById('theme') as HTMLLinkElement | null;
+                if (!themeLink) {
+                    themeLink = document.createElement('link');
+                    themeLink.rel = 'stylesheet';
+                    themeLink.id = 'theme';
+                    document.head.appendChild(themeLink);
+                }
+                if (replacement && selectedTheme) {
+                    themeLink.href = `${replacement}/assets/css/themes/${selectedTheme}.css`;
+                }
+            } catch (e) {}
+		</script>
 	</body>
 </html>

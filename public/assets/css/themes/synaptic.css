@@ -1,0 +1,11 @@
+:root {
+    --background-color: none;
+    --bg-image: var(--synaptibackground);
+    --border-bar: 2px solid none;
+    --base: #FFFFFF;
+    --text-color: none;
+    --font: Nuggets;
+    --sidebar-width: 35px;
+    --main-width: calc(100vw - 35px);
+    --author: "Synaptics Site";
+}

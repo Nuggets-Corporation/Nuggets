@@ -10,11 +10,15 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 const staticBuild = process.env.staticBuild === "static";
 const output = staticBuild ? "static" : "server";
 let replacement;
-if (staticBuild) replacement=JSON.stringify('https://cdn.jsdelivr/npm/@nuggetscorporation/dist');
+if (staticBuild) replacement=JSON.stringify('https://cdn.jsdelivr.net/npm/@nuggetscorporation/nuggets/dist');
 else replacement=JSON.stringify('');
 export default defineConfig({
     output: output,
     adapter: staticBuild ? undefined : node({mode: "middleware"}),
+    base: staticBuild ? JSON.parse(replacement) : '/',
+    build: {
+        assets: "_astro",
+    },
     vite: {
         define: { 'replacement': replacement },
         plugins: [viteStaticCopy({targets:[
@@ -23,6 +27,7 @@ export default defineConfig({
             {src: `${epoxyPath}/**/*`.replace(/\\/g, "/"), dest: "epoxy"},
             {src: `${libcurlPath}/**/*`.replace(/\\/g, "/"), dest: "libcurl"},
             {src: `${baremuxPath}/**/*`.replace(/\\/g, "/"), dest: "baremux"},
+            {src: `${baremuxPath}/worker.js`.replace(/\\/g, "/"), dest: ".", rename: "bareworker.js"},
         ]})],
         server: {
             proxy: {

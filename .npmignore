@@ -1,0 +1,11 @@
+node_modules/
+.astro/
+src/
+public/
+astro.config.mjs
+build.js
+env.d.ts
+server.mjs
+splash.js
+svg.map.ts
+tsconfig.json

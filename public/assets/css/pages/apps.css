@@ -33,6 +33,8 @@ select:focus {
     max-width: var(--main-width);
     max-height: 100vh;
     overflow-y: auto;
+    scrollbar-color: var(--base) transparent; 
+    scrollbar-width: thin;
 }
 
 .app {

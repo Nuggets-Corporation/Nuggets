@@ -1,6 +1,6 @@
 FROM node:20-alpine AS final
 
-RUN apk add --no-cache wget git tini python3 python3-venv
+RUN apk add --no-cache wget git tini python3
 ENTRYPOINT ["/sbin/tini", "--"]
 WORKDIR /app
 

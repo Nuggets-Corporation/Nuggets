@@ -28,7 +28,6 @@ select:focus {
     display: flex;
     flex: 1;
     flex-wrap: wrap;
-    align-items: center;
     justify-content: center;
     max-width: var(--main-width);
     max-height: 100vh;

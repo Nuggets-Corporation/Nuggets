@@ -11,6 +11,10 @@
     font-size: 1.25em;
 }
 
+.ai-slop {
+    display: none;
+}
+
 body {
     width: 100%;
     height: 100%;

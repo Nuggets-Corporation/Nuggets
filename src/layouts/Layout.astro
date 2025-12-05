@@ -48,6 +48,14 @@ const Theme = `<script>
         <meta property="og:type" content="website">
         <slot name="head"/>
     	<Fragment set:html={Theme} />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZYRLWLQH0"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-CZYRLWLQH0');
+        </script>
     </head>
     <body>
         <Slop/>

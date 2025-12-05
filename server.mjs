@@ -6,7 +6,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { splashtext, splashcolor } from "./splash.js";
 
 const server=express();
-const port='8050';
+const port = process.env.PORT || '8050';
 const wisp = 8040;
 
 let handle;
@@ -41,7 +41,7 @@ server.use('/wisp/',
 
 server.use(clientHandler);
 
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
 	const splashc = chalk.hex(splashcolor);
 	const theme = chalk.hex('#f88c00');
 	const soap = chalk.hex('#ebaaee');

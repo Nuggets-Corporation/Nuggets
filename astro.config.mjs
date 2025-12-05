@@ -10,7 +10,8 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 const staticBuild = process.env.staticBuild === "static";
 const output = staticBuild ? "static" : "server";
 let replacement;
-if (staticBuild) replacement=JSON.stringify('https://cdn.jsdelivr.net/npm/@nuggetscorporation/nuggets@latest/dist');
+const packagejson = require('./package.json');
+if (staticBuild) replacement=JSON.stringify(`https://cdn.jsdelivr.net/npm/@nuggetscorporation/nuggets@${packagejson.version}/dist`);
 else replacement=JSON.stringify('');
 export default defineConfig({
     output: output,

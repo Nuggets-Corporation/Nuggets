@@ -33,8 +33,7 @@ jobs:
         run: npm i
 
       - run: npm run build:static
-      - run: echo ${{ github.event.repository.name }} | grep -q ".github.io" || { echo "Nuggets needs to be hosted at https://github.com/${{ github.repository_owner }}/${{ github.repository_owner }}.github.io"; return 1}
-
+      - run: echo ${{ github.event.repository.name }} | grep -q ".github.io" || { echo "Nuggets needs to be hosted at https://github.com/${{ github.repository_owner }}/${{ github.repository_owner }}.github.io"; return 1; }
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

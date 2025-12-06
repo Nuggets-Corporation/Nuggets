@@ -14,4 +14,3 @@ interface ImportMeta {
 
 declare const routeQuery: any;
 declare const wispVal: any;
-declare const bareworker: any;

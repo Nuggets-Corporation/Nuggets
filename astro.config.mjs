@@ -16,7 +16,6 @@ import packagejson from './package.json';
 
 if (staticBuild) replacement = JSON.stringify(`https://cdn.jsdelivr.net/npm/@nuggetscorporation/nuggets@${packagejson.version}/dist`);
 else replacement = JSON.stringify('');
-const bareworkerdata = readFileSync(join(baremuxPath, 'worker.js'), 'utf-8');
 
 export default defineConfig({
     output: output,
@@ -28,7 +27,6 @@ export default defineConfig({
     vite: {
         define: { 
             'replacement': replacement,
-            'bareworker': JSON.stringify(`data:text/javascript;base64,${Buffer.from(bareworkerdata).toString('base64')}`)
         },
         plugins: [viteStaticCopy({targets:[
             {src: `${scramjetPath}/**/*`.replace(/\\/g, "/"), dest: "sj"},

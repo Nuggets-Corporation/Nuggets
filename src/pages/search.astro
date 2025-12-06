@@ -8,6 +8,7 @@ import Bookmarks from '@c/Bookmarks.astro';
 const Define = `<script>
     const replacement = '${replacement}';
     const wispVal = '${import.meta.env.wispUrl}';
+	const prefix = '${import.meta.env.prefix}';
 </script>`;
 ---
 
@@ -70,12 +71,12 @@ const Define = `<script>
                 iframeLoading(iframe, replacement);
             }
             
-            const scramjet = init(replacement);
+            const scramjet = init(replacement, prefix);
             const wispUrl = getWisp(wispVal);
 
             const selectedProxy = localStorage.getItem('proxy') || 'scramjet';
             const selectedTransport = localStorage.getItem('transport') || 'epoxy';
-            const connection = new window.BareMux.BareMuxConnection(`/bareworker.js`);
+            const connection = new window.BareMux.BareMuxConnection(prefix + `/bareworker.js`);
             await setTransport(connection, selectedTransport, replacement, wispUrl);
             const config = { replacement, wispVal, scramjet, proxy: selectedProxy };
 

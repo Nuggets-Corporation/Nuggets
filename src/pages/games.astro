@@ -3,6 +3,7 @@
 import Layout from '@l/Layout.astro';
 const Define = `<script>
 	const replacement = '${replacement}';
+	const prefix = '${import.meta.env.prefix}';
 </script>`;
 ---
 
@@ -30,11 +31,11 @@ const Define = `<script>
 		const search = document.getElementById('search') as HTMLFormElement | null;
 		const loading = document.getElementById('loading') as HTMLParagraphElement | null;
 		const path = replacement + '/games.json';
-		const fallbackpath = '/games.json';
+		const fallbackpath = prefix + '/games.json';
 		const handleSuccess = (appsData: any) => {
 			if (loading) loading.remove();
 			if (!apps) return;
-			const appElements = loadApps(appsData, apps, replacement); 
+			const appElements = loadApps(appsData, apps, replacement, prefix); 
 			const order = orderApps(appElements);
 
 			if (searchApps && sortApps) {

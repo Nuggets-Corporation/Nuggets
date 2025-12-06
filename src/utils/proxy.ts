@@ -42,7 +42,7 @@ export function iframeLoading(iframe: HTMLIFrameElement, replacement: string): v
     }
 }
 
-export function init(replacement: string): any {
+export function init(replacement: string, prefix: string): any {
     const { ScramjetController } = window.$scramjetLoadController();
 
     const scramjet = new ScramjetController({
@@ -58,9 +58,9 @@ export function init(replacement: string): any {
         if (navigator.serviceWorker) {
             scramjet.init();
             if (replacement)
-                navigator.serviceWorker.register(`/sw.js?r=${encodeURIComponent(replacement)}`);
+                navigator.serviceWorker.register(prefix + `/sw.js?r=${encodeURIComponent(replacement)}`);
             else
-                navigator.serviceWorker.register(`/sw.js`);
+                navigator.serviceWorker.register(prefix + `/sw.js`);
         } else {
             console.warn("Service workers not supported");
         }

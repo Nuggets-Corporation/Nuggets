@@ -33,13 +33,13 @@ export function orderApps(app: HTMLElement[]): AppOrder[] {
     return app.map((card, index) => ({ card, index }));
 }
 
-export function loadApps(apps: App[], appsContainer: HTMLElement, replacement: string): HTMLElement[] {
+export function loadApps(apps: App[], appsContainer: HTMLElement, replacement: string, prefix: string): HTMLElement[] {
     const appElements: HTMLElement[] = [];
     const fragment = document.createDocumentFragment();
 
     apps.forEach((app) => {
         const url = document.createElement('a');
-        url.href = `/search?q=${encodeURIComponent(btoa(app.url))}`;
+        url.href = prefix + `/search?q=${encodeURIComponent(btoa(app.url))}`;
         url.className = 'app';
         url.setAttribute('data-name', app.name.toLowerCase());
 

@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20
       - run: npm i
-      - run: npm build:static
+      - run: npm run build:static
 
   publish-npm:
     needs: build

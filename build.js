@@ -10,7 +10,7 @@ const argv = yargs(hideBin(process.argv)).options({
         type: 'string',
         description: 'Wisp URL',
     },
-    'prefix': {
+    'parent': {
         alias: 'p',
         type: 'string',
         description: 'Prefix (If deploying on websites like github pages)',
@@ -28,11 +28,11 @@ if (argv.wisp) {
     };
 }
 
-if (argv.prefix) {
-    if (argv.prefix.startsWith('/'))
-        process.env.prefix = argv.prefix;
+if (argv.parent) {
+    if (argv.parent.startsWith('/'))
+        process.env.prefix = argv.parent;
     else
-        process.env.prefix = '/' + argv.prefix;
+        process.env.prefix = '/' + argv.parent;
     if (process.env.prefix.endsWith('/'))
         process.env.prefix = process.env.prefix.slice(0, -1);
     console.log(`Using prefix: ${process.env.prefix}`);

@@ -33,7 +33,7 @@ jobs:
         run: npm i
 
       - name: Build
-        run: npm run build:static --prefix ${{ github.event.repository.name }}
+        run: npm run build:static --parent ${{ github.event.repository.name }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

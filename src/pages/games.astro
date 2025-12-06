@@ -30,7 +30,7 @@ const Define = `<script>
 		const search = document.getElementById('search') as HTMLFormElement | null;
 		const loading = document.getElementById('loading') as HTMLParagraphElement | null;
 		const path = replacement + '/games.json';
-		const fallbackpath = './games.json';
+		const fallbackpath = '/games.json';
 		const handleSuccess = (appsData: any) => {
 			if (loading) loading.remove();
 			if (!apps) return;

@@ -75,7 +75,7 @@ const Define = `<script>
 
             const selectedProxy = localStorage.getItem('proxy') || 'scramjet';
             const selectedTransport = localStorage.getItem('transport') || 'epoxy';
-            const connection = new window.BareMux.BareMuxConnection('./bareworker.js');
+            const connection = new window.BareMux.BareMuxConnection('/bareworker.js');
             await setTransport(connection, selectedTransport, replacement, wispUrl);
             const config = { replacement, wispVal, scramjet, proxy: selectedProxy };
 

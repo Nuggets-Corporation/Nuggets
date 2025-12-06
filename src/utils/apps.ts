@@ -39,7 +39,7 @@ export function loadApps(apps: App[], appsContainer: HTMLElement, replacement: s
 
     apps.forEach((app) => {
         const url = document.createElement('a');
-        url.href = `./search?q=${encodeURIComponent(btoa(app.url))}`;
+        url.href = `/search?q=${encodeURIComponent(btoa(app.url))}`;
         url.className = 'app';
         url.setAttribute('data-name', app.name.toLowerCase());
 

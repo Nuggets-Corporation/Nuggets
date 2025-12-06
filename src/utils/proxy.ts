@@ -58,9 +58,9 @@ export function init(replacement: string): any {
         if (navigator.serviceWorker) {
             scramjet.init();
             if (replacement)
-                navigator.serviceWorker.register(`./sw.js?r=${encodeURIComponent(replacement)}`);
+                navigator.serviceWorker.register(`/sw.js?r=${encodeURIComponent(replacement)}`);
             else
-                navigator.serviceWorker.register(`./sw.js`);
+                navigator.serviceWorker.register(`/sw.js`);
         } else {
             console.warn("Service workers not supported");
         }

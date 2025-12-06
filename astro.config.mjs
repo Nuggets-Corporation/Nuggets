@@ -34,7 +34,7 @@ export default defineConfig({
                 dest: "baremux",
                 transform: (content, filename) => {
                     if (filename.endsWith('index.js')) {
-                        return content.toString().replace(/!e\.startsWith\("\/"\)&&/g, '!e.startsWith("/")&&!e.startsWith(".")&&');
+                        return content.toString().replace(/!e\.startsWith\("\/"\)&&/g, '!e.startsWith("/")&&!e.startsWith("data")&&');
                     }
                     return content;
                 }

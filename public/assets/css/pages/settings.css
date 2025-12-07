@@ -1,14 +1,27 @@
 .settings {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    flex-grow: 1;
-    height: 100%;
+    flex: 1;
     padding: 12px;
     background-color: var(--background-color);
     color: var(--text-color);
-    border-radius: 10px;
     box-sizing: border-box;
+}
+
+.settings.modal {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: var(--border-bar);
+    background-color: var(--base);
+    border-radius: 10px;
+}
+
+.settings.modal.visible {
+    opacity: 1;
+    visibility: visible;
 }
 
 h2 {
@@ -50,6 +63,7 @@ select:focus {
 }
 
 .actions {
+    gap: 12px;
     margin-top: 20px;
     width: 25%;
     display: flex;

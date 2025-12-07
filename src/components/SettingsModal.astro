@@ -1,0 +1,133 @@
+<link rel="stylesheet" href={replacement + '/assets/css/pages/settings.css'}>
+<h2>Settings</h2>
+<div class="field">
+<label for="themesel">Theme</label>
+<select id="themesel"></select>
+</div>
+<p class="author"></p>
+<div class="field">
+<label for="senginesel">Search Engine</label>
+<select id="senginesel">
+    <option value="duckduckgo">DuckDuckGo</option>
+    <option value="brave">Brave</option>
+    <option value="google">Google</option>
+    <option value="bing">Bing</option> <!--you're a weird sicko if you use bing-->
+</select>
+</div>
+<div class="field">
+<label for="proxysel">Proxy</label>
+<select id="proxysel">
+    <option value="chicken">Scramjet</option>
+    <option value="nuggets">UV</option>
+</select>
+</div>
+<div class="field">
+<label for="transportsel">Transport</label>
+<select id="transportsel">
+    <option value="epoxy">Epoxy</option>
+    <option value="libcurl">libcurl</option>
+</select>
+</div>
+<div class="field">
+<label for="transportsel">Transport</label>
+<select id="transportsel">
+    <option value="epoxy">Epoxy</option>
+    <option value="libcurl">libcurl</option>
+</select>
+</div>
+<div class="actions">
+<button id="savesettings">Save</button>
+<button id="resetsettings" type="button">Reset</button>
+</div>
+<script type="module">
+function applyTheme(theme) {
+    const id = 'theme';
+    let link = document.getElementById(id);
+    const href = `${replacement}/assets/css/themes/${theme}.css`;
+    if (!link) {
+    link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.id = id;
+    document.head.appendChild(link);
+    }
+    link.href = href;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const themeSelect = document.getElementById('themesel');
+    const sengineSelect = document.getElementById('senginesel');
+    const proxySelect = document.getElementById('proxysel');
+    const transportSelect = document.getElementById('transportsel');
+    const saveBtn = document.getElementById('savesettings');
+    const resetBtn = document.getElementById('resetsettings');
+    const originalSaveText = 'Save';
+    const savedSaveText = 'Saved ✓';
+    
+    let themes = ['default'];
+    const response = await fetch(`${replacement}/themes.json`);
+    if (response.ok) {
+    themes = await response.json();
+    }
+    
+    themes.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+    themeSelect.appendChild(opt);
+    });
+
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    const savedEngine = localStorage.getItem('sengine') || 'brave';
+    const savedProxy = localStorage.getItem('proxy') || 'chicken';
+    const savedTransport = localStorage.getItem('transport') || 'epoxy';
+
+    themeSelect.value = savedTheme;
+    sengineSelect.value = savedEngine;
+    proxySelect.value = savedProxy;
+    transportSelect.value = savedTransport;
+
+    applyTheme(themeSelect.value);
+    
+    let timeoutId = null;
+
+    function setSavedState() {
+    saveBtn.textContent = savedSaveText;
+    saveBtn.disabled = true;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+        saveBtn.textContent = originalSaveText;
+        saveBtn.disabled = false;
+    }, 3000);
+    }
+
+    saveBtn.addEventListener('click', () => {
+    const theme = themeSelect.value;
+    const sengine = sengineSelect.value;
+    const proxy = proxySelect.value;
+    const transport = transportSelect.value;
+
+    localStorage.setItem('theme', theme);
+    localStorage.setItem('sengine', sengine);
+    localStorage.setItem('proxy', proxy);
+    localStorage.setItem('transport', transport);
+
+    applyTheme(theme);
+    setSavedState();
+    });
+
+    resetBtn.addEventListener('click', () => {
+    localStorage.removeItem('theme');
+    localStorage.removeItem('sengine');
+    localStorage.removeItem('proxy');
+    localStorage.removeItem('transport');
+    themeSelect.value = 'default';
+    sengineSelect.value = 'brave';
+    proxySelect.value = 'chicken';
+    transportSelect.value = 'epoxy';
+    applyTheme('default');
+    saveBtn.textContent = originalSaveText;
+    saveBtn.disabled = false;
+    clearTimeout(timeoutId);
+    });
+});
+</script>

@@ -16,7 +16,7 @@ const Theme = `<script>
 		const selectedTheme = localStorage.getItem('theme') || 'default';
 		const themeLink = document.getElementById('theme');
 		if (themeLink && selectedTheme !== 'default') {
-		themeLink.href = \`${replacement}/assets/css/themes/\${selectedTheme}.css\`;
+		themeLink.href = \`${replacement}/assets/css/themes/$\{selectedTheme}.css\`;
 		}
 	})();
 </script>`;

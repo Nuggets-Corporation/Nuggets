@@ -96,7 +96,21 @@ export async function setTransport(
 }
 
 export function searchUrl(input: string): string {
+    const sengine = localStorage.getItem('sengine');
     let template = "https://search.brave.com/search?q=%s";
+    switch (sengine) {
+        case 'google':
+            template = "https://www.google.com/search?q=%s";
+            break;
+        case 'duckduckgo':
+            template = "https://www.duckduckgo.com/search?q=%s";
+            break;
+        case 'bing':
+            template = "https://www.duckduckgo.com/search?q=%s";
+            break;
+        default:
+            template = "https://search.brave.com/search?q=%s";
+    }
     try {
         return new URL(input).toString();
     } catch (err) {}
@@ -225,6 +239,45 @@ export function reload(): void {
     const activeIframe = document.querySelector('.tab-iframe.active') as HTMLIFrameElement;
     if (activeIframe) {
         activeIframe.src = activeIframe.src;
+    }
+}
+
+export function settingsModal(modal: HTMLElement | null) {
+    if (!modal) return;
+    const settingsBtn = document.getElementById('settings');
+    if (!settingsBtn) return;
+    
+    const visible = modal.classList.contains('visible');
+    
+    if (!visible) {
+        modal.classList.add('visible');
+        const addressbar = document.getElementById('address').getBoundingClientRect();
+        modal.style.position = 'fixed';
+        modal.style.top = `${addressbar.bottom + 10}px`;
+        modal.style.right = `${window.innerWidth - settingsBtn.getBoundingClientRect().right}px`;
+
+        const clickOut = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const settingsBtn = document.getElementById('settings');
+            if (!modal.contains(target) && target !== settingsBtn && !settingsBtn?.contains(target)) {
+                modal.classList.remove('visible');
+                document.removeEventListener('click', clickOut);
+                document.removeEventListener('keydown', escapeOut);
+            }
+        };
+
+        const escapeOut = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('visible');
+                document.removeEventListener('click', clickOut);
+                document.removeEventListener('keydown', escapeOut);
+            }
+        };
+        
+        document.addEventListener('click', clickOut);
+        document.addEventListener('keydown', escapeOut);
+    } else {
+        modal.classList.remove('visible');
     }
 }
 

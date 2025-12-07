@@ -5,6 +5,7 @@ import PromptClose from '@s/PromptClose.astro';
 import Tabs from '@c/Tabs.astro';
 import AddressBar from '@c/AddressBar.astro';
 import Bookmarks from '@c/Bookmarks.astro';
+import SettingsModal from '@c/SettingsModal.astro';
 const Define = `<script>
     const replacement = '${replacement}';
     const wispVal = '${import.meta.env.wispUrl}';
@@ -20,12 +21,15 @@ const Define = `<script>
         <Bookmarks/>
         <div id="content">
         </div>
+        <div id="settingsModal" class="settings modal">
+            <SettingsModal/>
+        </div>
 	</div>
 
     <script src={replacement + '/baremux/index.js'} defer></script>
     <Proxy/>
     <script>
-        import { iframeLoading, init, getWisp, setTransport, loadUrl, handleSubmit,setupIframe, goBack, goForward, reload, updateNav } from "../utils/proxy";
+        import { iframeLoading, init, getWisp, setTransport, loadUrl, handleSubmit, setupIframe, goBack, goForward, reload, updateNav, settingsModal } from "../utils/proxy";
         import { updateUrl, getActiveTab, newTab } from "../utils/tabs";
         import { bookmarks, bookmarkToggle, updateBookmark } from "../utils/bookmarks";
         
@@ -63,6 +67,8 @@ const Define = `<script>
             const backBtn = document.getElementById("back");
             const forwardBtn = document.getElementById("forward");
             const reloadBtn = document.getElementById("reload");
+            const settingsBtn = document.getElementById("settings");
+            const settings = document.getElementById("settingsModal");
             
             bookmarks(replacement);
             
@@ -137,6 +143,12 @@ const Define = `<script>
             if (reloadBtn) {
                 reloadBtn.addEventListener('click', () => {
                     reload();
+                });
+            }
+            
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    settingsModal(settings);
                 });
             }
             

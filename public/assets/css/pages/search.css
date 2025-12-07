@@ -178,7 +178,7 @@ div#newtab {
 }
 
 #url:focus { outline: none; }
-#url::placeholder { color: var(--text-color); }
+#url::placeholder { user-select: none; color: var(--text-color); }
 
 #bookmarks {
     background-color: var(--base);

@@ -99,13 +99,13 @@ export function searchUrl(input: string): string {
     const sengine = localStorage.getItem('sengine');
     let template = "https://search.brave.com/search?q=%s";
     switch (sengine) {
-        case 'google':
+        case 'curious':
             template = "https://www.google.com/search?q=%s";
             break;
-        case 'duckduckgo':
+        case 'veryveryeducational':
             template = "https://www.duckduckgo.com/search?q=%s";
             break;
-        case 'bing':
+        case 'devilsadvocateorjuststupid':
             template = "https://www.duckduckgo.com/search?q=%s";
             break;
         default:

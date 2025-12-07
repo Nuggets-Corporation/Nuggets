@@ -8,10 +8,10 @@
 <div class="field">
 <label for="senginesel">Search Engine</label>
 <select id="senginesel">
-    <option value="duckduckgo">DuckDuckGo</option>
-    <option value="brave">Brave</option>
-    <option value="google">Google</option>
-    <option value="bing">Bing</option> <!--you're a weird sicko if you use bing-->
+    <option value="veryveryeducational">DuckDuckGo</option>
+    <option value="heroicallyeducational">Brave</option>
+    <option value="curious">Google</option>
+    <option value="devilsadvocateorjuststupid">Bing</option> <!--you're a weird sicko if you use bing-->
 </select>
 </div>
 <div class="field">
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const savedTheme = localStorage.getItem('theme') || 'default';
-    const savedEngine = localStorage.getItem('sengine') || 'brave';
+    const savedEngine = localStorage.getItem('sengine') || 'heroicallyeducational';
     const savedProxy = localStorage.getItem('proxy') || 'chicken';
     const savedTransport = localStorage.getItem('transport') || 'epoxy';
 
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     localStorage.removeItem('proxy');
     localStorage.removeItem('transport');
     themeSelect.value = 'default';
-    sengineSelect.value = 'brave';
+    sengineSelect.value = 'heroicallyeducational';
     proxySelect.value = 'chicken';
     transportSelect.value = 'epoxy';
     applyTheme('default');

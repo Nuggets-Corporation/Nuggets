@@ -128,82 +128,112 @@ export function updateUrl(tabId: string, url: string, replacement: string): void
     }
 }
 
-export function updateMeta(tabId: string, replacement: string): void {
+function setTitle(titleElement: HTMLElement | null, address: string) {
+    if (!titleElement) return;
+    
+    const domain = getDomain(address);
+    if (domain) {
+        const parts = domain.replace('www.', '').split('.');
+        const name = parts.length > 1 ? parts[parts.length - 2] : parts[0];
+        titleElement.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+    } else {
+        titleElement.textContent = 'Untitled';
+    }
+}
+
+export async function updateMeta(tabId: string, replacement: string): Promise<void> {
     const tab = document.querySelector(`#tab[data-tab-id="${tabId}"]`) as HTMLElement;
     const iframe = document.querySelector(`.tab-iframe[data-tab-id="${tabId}"]`) as HTMLIFrameElement;
 
     if (!tab || !iframe) return;
 
+    const titleElement = tab.querySelector('#title') as HTMLElement;
+    const faviconElement = tab.querySelector('#favicon') as HTMLImageElement;
+    
+    const address = tab.getAttribute('data-url');
+    
+    if (!address || address === '') {
+        if (titleElement) titleElement.textContent = 'New Tab';
+        if (faviconElement) faviconElement.src = `${replacement}/assets/svg/favicon.svg`;
+        return;
+    }
+
     try {
         const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (!iframeDoc) return;
-
-        const titleElement = tab.querySelector('#title') as HTMLElement;
-        if (titleElement && iframeDoc.title) {
-            const title = iframeDoc.title.trim();
-            titleElement.textContent = title.length > 30 ? title.substring(0, 27) + '...' : title;
-        } else if (iframe.src === 'about:blank' || !iframe.src) {
-            titleElement.textContent = 'New Tab';
-        } else {
-            titleElement.textContent = 'Untitled';
-        }
-
-        const faviconElement = tab.querySelector('#favicon') as HTMLImageElement;
-        if (faviconElement) {
-            const favicon = getFavicon(iframeDoc, iframe.src, replacement);
-            if (favicon) {
-                faviconElement.src = favicon;
-                faviconElement.onerror = () => {
-                    const replacement = tab.getAttribute('data-replacement') || '';
-                    faviconElement.src = `${replacement}/assets/imgs/favicon.png`;
-                };
+        const title = iframeDoc?.title?.trim();
+        
+        if (titleElement) {
+            if (title) {
+                titleElement.textContent = title.length > 30 ? title.substring(0, 27) + '...' : title;
+            } else if (iframe.src === 'about:blank' || !iframe.src) {
+                titleElement.textContent = 'New Tab';
+            } else {
+                setTitle(titleElement, address);
             }
         }
     } catch (e) {
-        console.log('Cannot access iframe content (cross-origin)');
+        setTitle(titleElement, address);
+    }
+
+    if (faviconElement) {
+        try {
+            const faviconUrl = await getFavicon(address);
+            if (faviconUrl) {
+                faviconElement.src = faviconUrl;
+            } else {
+                faviconElement.src = `${replacement}/assets/imgs/favicon.png`;
+            }
+        } catch (e) {
+            faviconElement.src = `${replacement}/assets/imgs/favicon.png`;
+        }
     }
 }
 
-function getFavicon(doc: Document, iframeSrc: string, replacement: string): string | null {
-    const iconLinks = [
-        doc.querySelector('link[rel="icon"]'),
-        doc.querySelector('link[rel="shortcut icon"]'),
-        doc.querySelector('link[rel="apple-touch-icon"]')
-    ];
-
-    for (const link of iconLinks) {
-        if (link) {
-            const href = link.getAttribute('href');
-            if (href) {
-                return resolve(href, iframeSrc);
-            }
-        }
-    }
-
+function getDomain(url: string): string | null {
     try {
-        const url = new URL(iframeSrc);
-        return `${replacement}/assets/imgs/favicon.png`;
+        if (!url || typeof url !== "string") return null;
+        if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+
+        return new URL(url).hostname;
     } catch (e) {
         return null;
     }
 }
 
-function resolve(href: string, baseUrl: string): string {
-    try {
-        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('data:')) {
-            return href;
-        }
+const cache = new Map<string, string>();
 
-        const base = new URL(baseUrl);
-        if (href.startsWith('//')) {
-            return `${base.protocol}${href}`;
-        }
-        if (href.startsWith('/')) {
-            return `${base.origin}${href}`;
-        }
-        return new URL(href, baseUrl).toString();
+async function getFavicon(url: string): Promise<string | null> {
+    const domain = getDomain(url);
+    if (!domain) return `${replacement}/assets/imgs/favicon.png`;
+
+    if (cache.has(domain)) {
+        return cache.get(domain) || null;
+    }
+
+    const favicons = [
+        `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+        `https://www.google.com/s2/favicons?domain=${domain}&sz=32`,
+        `https://${domain}/favicon.ico`
+    ];
+
+    const promises = favicons.map(faviconUrl => 
+        new Promise<string>((resolve, reject) => {
+            const img = new Image();
+            const timeout = setTimeout(() => reject(new Error('timeout')), 2000);
+            
+            img.onload = () => {clearTimeout(timeout); resolve(faviconUrl)};
+            img.onerror = () => {clearTimeout(timeout); reject(new Error('failed'))};
+            img.src = faviconUrl;
+        })
+    );
+
+    try {
+        const faviconUrl = await Promise.any(promises);
+        cache.set(domain, faviconUrl);
+        return faviconUrl;
     } catch (e) {
-        return href;
+        cache.set(domain, `${replacement}/assets/imgs/favicon.png`);
+        return `${replacement}/assets/imgs/favicon.png`;
     }
 }
 
@@ -224,10 +254,7 @@ export function setupIframe(tabId: string, replacement: string): void {
             return;
         }
 
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (iframeDoc) {
-            updateMeta(tabId, replacement);
-        }
+        updateMeta(tabId, replacement);
     }, 1000);
 
     iframe.setAttribute('data-monitor-interval', checkInterval.toString());

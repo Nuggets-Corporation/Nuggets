@@ -40,7 +40,7 @@ iframe.active {
     padding: 2px 12px;
     gap: 12px;
     border-radius: 15px;
-    background-color: var(--base);
+    background-color: var(--background-color);
     margin: 3px;
     transition: filter 0.2s ease-in-out, max-width 0.2s ease-in-out;
     max-width: 150px;
